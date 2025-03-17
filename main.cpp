@@ -205,7 +205,6 @@ int main(int argc, char* argv[]) {
 
                 int type = get_icmp_type(buffer + ip_header_len);
 
-                last_responser = responser;
                 auto end = std::chrono::high_resolution_clock::now();
                 auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
 
@@ -215,6 +214,7 @@ int main(int argc, char* argv[]) {
                     PID_SEQ response = parse_icmp_response(buffer + offset);
                 
                     if (response.pid == pid && response.seq == i - 1) {
+                        last_responser = responser;
                         host_response hr;
                         hr.host = responser;
                         hr.time = elapsed.count();
