@@ -115,12 +115,23 @@ void print_result(int seq, vector<host_response> responses) {
     cout << endl;
 }
 
+bool is_valid_ip(const string& ip) {
+    struct sockaddr_in sa;
+    return inet_pton(AF_INET, ip.c_str(), &(sa.sin_addr)) != 0;
+}
+
 int main(int argc, char* argv[]) {
     if(argc < 2){
         cerr << "Usage: " << argv[0] << " <host>" << endl;
         return EXIT_FAILURE;
     }
     string host = argv[1];
+
+    if(!is_valid_ip(host)) {
+        cerr << "Invalid host" << endl;
+        cerr << "Usage: " << argv[0] << " <host>" << endl;
+        return EXIT_FAILURE;
+    }
 
     int sockfd = socket(AF_INET, SOCK_RAW, IPPROTO_ICMP);
     if (sockfd < 0) {
